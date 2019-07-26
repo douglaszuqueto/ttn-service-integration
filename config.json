@@ -1,4 +1,6 @@
 {
+    "provider": "mqtt",
+    "timezone": "America/Sao_Paulo",
     "stream": {
       "active": false,
       "broker": {
