@@ -1,0 +1,33 @@
+{
+    "stream": {
+      "active": false,
+      "broker": {
+        "host": "host",
+        "port": "port",
+        "user": "user",
+        "password": "password"
+      }
+    },
+    "api": {
+      "port": 3000,
+      "secure": {
+        "active": false,
+        "token": "password"
+      }
+    },
+    "ttn": [
+      {
+        "host": "host",
+        "user": "user",
+        "password": "password",
+        "token": "token"
+      }
+    ],
+    "postgres": {
+      "host": "host",
+      "port": "port",
+      "user": "user",
+      "password": "password",
+      "database": "database"
+    }
+}
