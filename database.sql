@@ -44,7 +44,8 @@ $BODY$;
 CREATE TABLE public.metric
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
-    device_id character varying COLLATE pg_catalog."default" NOT NULL,
+    app_id character varying COLLATE pg_catalog."default" NOT NULL,
+    dev_id character varying COLLATE pg_catalog."default" NOT NULL,
     payload jsonb NOT NULL,
     "time" timestamp with time zone NOT NULL,
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
