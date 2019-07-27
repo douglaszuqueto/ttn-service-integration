@@ -9,6 +9,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Código retirado do projeto LoRaServer, referente ao repositório lora-app-server
+//
+// Fonte
+// https://github.com/brocaar/lora-app-server/blob/master/internal/codec/cayenne_lpp.go
+
 // CayenneLPP types.
 const (
 	lppDigitalInput      byte = 0
