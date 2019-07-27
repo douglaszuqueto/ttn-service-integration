@@ -9,37 +9,37 @@ import (
 
 // Config config
 type Config struct {
-	Provider string `json:"provider"`
-	Timezone string `json:"timezone"`
+	Provider string
+	Timezone string
 	API      struct {
-		Port   int `json:"port"`
+		Port   int
 		Secure struct {
-			Active bool   `json:"active"`
-			Token  string `json:"token"`
-		} `json:"secure"`
-	} `json:"api"`
+			Active bool
+			Token  string
+		}
+	}
 	Ttn []struct {
-		Host     string `json:"host"`
-		User     string `json:"user"`
-		Password string `json:"password"`
-		Token    string `json:"token"`
-	} `json:"ttn"`
+		Host     string
+		User     string
+		Password string
+		Token    string
+	}
 	Postgres struct {
-		Host     string `json:"host"`
-		Port     string `json:"port"`
-		User     string `json:"user"`
-		Password string `json:"password"`
-		Database string `json:"database"`
-	} `json:"postgres"`
+		Host     string
+		Port     string
+		User     string
+		Password string
+		Database string
+	}
 	Stream struct {
-		Active bool `json:"active"`
+		Active bool
 		Broker struct {
-			Host     string `json:"host"`
-			Port     string `json:"port"`
-			User     string `json:"user"`
-			Password string `json:"password"`
-		} `json:"broker"`
-	} `json:"stream"`
+			Host     string
+			Port     string
+			User     string
+			Password string
+		}
+	}
 }
 
 // Cfg Cfg
