@@ -12,3 +12,6 @@ dev:
 
 prod: build
 	upx ./bin/ttn-service-integration
+
+run: prod
+	./bin/ttn-service-integration --config="./config.env.json"
