@@ -50,13 +50,13 @@ CREATE TABLE public.metric
     "time" timestamp with time zone NOT NULL,
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT metric_pkey PRIMARY KEY (id)
-)
+);
 
--- Trigger: products_notify_event
+-- Trigger: metric_notify_event
 
--- DROP TRIGGER products_notify_event ON public.metric;
+-- DROP TRIGGER metric_notify_event ON public.metric;
 
-CREATE TRIGGER products_notify_event
+CREATE TRIGGER metric_notify_event
     AFTER INSERT OR UPDATE 
     ON public.metric
     FOR EACH ROW
