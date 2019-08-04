@@ -28,6 +28,7 @@ const (
 	lppBarometer         byte = 115
 	lppGyrometer         byte = 134
 	lppGPSLocation       byte = 136
+	lppUnixTime          byte = 133
 )
 
 // Accelerometer defines the accelerometer data.
@@ -53,18 +54,19 @@ type GPSLocation struct {
 
 // CayenneLPP defines the Cayenne LPP data structure.
 type CayenneLPP struct {
-	DigitalInput      map[byte]uint8         `json:"digitalInput,omitempty" influxdb:"digital_input"`
-	DigitalOutput     map[byte]uint8         `json:"digitalOutput,omitempty" influxdb:"digital_output"`
-	AnalogInput       map[byte]float64       `json:"analogInput,omitempty" influxdb:"analog_input"`
-	AnalogOutput      map[byte]float64       `json:"analogOutput,omitempty" influxdb:"analog_output"`
-	IlluminanceSensor map[byte]uint16        `json:"illuminanceSensor,omitempty" influxdb:"illuminance_sensor"`
-	PresenceSensor    map[byte]uint8         `json:"presenceSensor,omitempty" influxdb:"presence_sensor"`
-	TemperatureSensor map[byte]float64       `json:"temperatureSensor,omitempty" influxdb:"temperature_sensor"`
-	HumiditySensor    map[byte]float64       `json:"humiditySensor,omitempty" influxdb:"humidity_sensor"`
-	Accelerometer     map[byte]Accelerometer `json:"accelerometer,omitempty" influxdb:"accelerometer"`
-	Barometer         map[byte]float64       `json:"barometer,omitempty" influxdb:"barometer"`
-	Gyrometer         map[byte]Gyrometer     `json:"gyrometer,omitempty" influxdb:"gyrometer"`
-	GPSLocation       map[byte]GPSLocation   `json:"gpsLocation,omitempty" influxdb:"gps_location"`
+	DigitalInput      map[byte]uint8         `json:"digital_input,omitempty"`
+	DigitalOutput     map[byte]uint8         `json:"digital_output,omitempty"`
+	AnalogInput       map[byte]float64       `json:"analog_input,omitempty"`
+	AnalogOutput      map[byte]float64       `json:"analog_output,omitempty"`
+	IlluminanceSensor map[byte]uint16        `json:"illuminance,omitempty"`
+	PresenceSensor    map[byte]uint8         `json:"presence,omitempty"`
+	TemperatureSensor map[byte]float64       `json:"temperature,omitempty"`
+	HumiditySensor    map[byte]float64       `json:"humidity,omitempty"`
+	Accelerometer     map[byte]Accelerometer `json:"accelerometer,omitempty"`
+	Barometer         map[byte]float64       `json:"barometer,omitempty"`
+	Gyrometer         map[byte]Gyrometer     `json:"gyrometer,omitempty"`
+	GPSLocation       map[byte]GPSLocation   `json:"gps,omitempty"`
+	UnixTime          map[byte]uint32        `json:"unixtime"`
 }
 
 // Object returns the CayenneLPP data object.
@@ -112,6 +114,8 @@ func (c *CayenneLPP) DecodeBytes(data []byte) error {
 			err = lppGyrometerDecode(buf[0], r, c)
 		case lppGPSLocation:
 			err = lppGPSLocationDecode(buf[0], r, c)
+		case lppUnixTime:
+			err = lppUnixTimeDecode(buf[0], r, c)
 		default:
 			return fmt.Errorf("invalid data type: %d", buf[1])
 		}
@@ -185,6 +189,11 @@ func (c CayenneLPP) EncodeToBytes() ([]byte, error) {
 	}
 	for k, v := range c.GPSLocation {
 		if err := lppGPSLocationEncode(k, w, v); err != nil {
+			return nil, err
+		}
+	}
+	for k, v := range c.UnixTime {
+		if err := lppUnixTimeEncode(k, w, v); err != nil {
 			return nil, err
 		}
 	}
@@ -477,5 +486,26 @@ func lppGPSLocationEncode(channel uint8, w io.Writer, data GPSLocation) error {
 		binary.BigEndian.PutUint32(b, uint32(v))
 		w.Write(b[0:3])
 	}
+	return nil
+}
+
+func lppUnixTimeEncode(channel uint8, w io.Writer, data uint32) error {
+	w.Write([]byte{channel, lppUnixTime})
+	if err := binary.Write(w, binary.BigEndian, data); err != nil {
+		return errors.Wrap(err, "write uint32 error")
+	}
+	return nil
+}
+
+func lppUnixTimeDecode(channel uint8, r io.Reader, out *CayenneLPP) error {
+	var bar uint32
+	if err := binary.Read(r, binary.BigEndian, &bar); err != nil {
+		return errors.Wrap(err, "read uint32 error")
+	}
+	if out.UnixTime == nil {
+		out.UnixTime = make(map[uint8]uint32)
+	}
+
+	out.UnixTime[channel] = bar
 	return nil
 }
