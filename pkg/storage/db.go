@@ -22,8 +22,8 @@ func GetConn() *sql.DB {
 	return db
 }
 
-// InitConn init connection
-func InitConn() {
+// Connect init connection
+func Connect() {
 	cfg := config.Cfg
 
 	connStr := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
