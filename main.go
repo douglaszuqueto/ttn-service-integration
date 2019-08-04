@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	fmt.Println("TTN Service Integration")
+	fmt.Printf("\n\tTTN Service Integration\n\n")
 
 	cmd.Execute()
 }
